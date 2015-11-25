@@ -6,5 +6,6 @@ RUN apk add \
     curl \
     bash \
     openjdk7 \
+    ttf-dejavu \
  && rm /var/cache/apk/*
 
