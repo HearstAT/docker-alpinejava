@@ -4,6 +4,6 @@ MAINTAINER Hearst Automation Team <atat@hearst.com>
 RUN apk update
 RUN apk add \
     curl \
-    openjdk8 \
+    openjdk7 \
  && rm /var/cache/apk/*
 
