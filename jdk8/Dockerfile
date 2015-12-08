@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.2
 MAINTAINER Hearst Automation Team <atat@hearst.com>
 
 # Install cURL
@@ -7,9 +7,7 @@ RUN apk update
 RUN apk add \
     curl \
     ca-certificates \
-    tar \
-    bash \
-    ttf-dejavu
+    tar
 
 RUN curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
     apk add --allow-untrusted /tmp/glibc-2.21-r2.apk \
@@ -29,6 +27,7 @@ RUN mkdir -p /opt/jdk && chmod -R 777 /opt
 RUN curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie"\
     http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-b${JAVA_VERSION_BUILD}/${JAVA_PACKAGE}-${JAVA_VERSION_MAJOR}u${JAVA_VERSION_MINOR}-linux-x64.tar.gz \
     | tar -xzf - --strip-components=1 -C /opt/jdk &&\
+    chmod -R 777 /opt/jdk && \
     rm -rf /opt/jdk/*src.zip \
            /opt/jdk/lib/missioncontrol \
            /opt/jdk/lib/visualvm \
@@ -53,10 +52,6 @@ RUN curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie"\
 # Symlinks to fix issues with error "libc.musl-x86_64.so.1: cannot open shared object file: No such file or directory"
 RUN ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1 && \
     ln -s /lib/libz.so.1 /usr/lib/libz.so.1
-
-# Fix java permissions
-RUN chown -R root:root /opt/jdk \
-    && chmod -R 777 /opt/jdk
 
 # Fix Signature verification failed in update site 'default'
 ADD java.security /opt/jdk/jre/lib/security/java.security
