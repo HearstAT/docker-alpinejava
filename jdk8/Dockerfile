@@ -51,6 +51,10 @@ RUN curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie"\
                /opt/jdk/jre/lib/amd64/libjavafx*.so \
                /opt/jdk/jre/lib/amd64/libjfx*.so
 
+# Symlinks to fix issues with error "libc.musl-x86_64.so.1: cannot open shared object file: No such file or directory"
+RUN ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1 && \
+    ln -s /lib/libz.so.1 /usr/lib/libz.so.1
+
 # Fix java permissions
 RUN chown -R root:root /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/ /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/* \
     && chmod -R 777 /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/ /opt/jdk1.${JAVA_VERSION_MAJOR}.0_${JAVA_VERSION_MINOR}/*
